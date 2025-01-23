@@ -1,9 +1,17 @@
-import http from 'http'
+import express from 'express';
+import {booksRoutes} from "./routes/booksRoutes.js";
+import mongoose from "mongoose";
 
-http.createServer((req, res) => {
+const app = express()
 
-    res.write('hello user')
+app.use(express.json())
 
-    res.end()
+app.use('/api/books', booksRoutes);
 
-}).listen(4000, 'localhost')
+mongoose.connect("mongodb://localhost:27017", { dbName: 'barn9din_db'})
+    .then(() => {
+        console.log("connect to DB successfully")
+        app.listen(4000, 'localhost', () => console.log("Listening to port 4000"))
+    })
+    .catch((err) => console.log(err));
+
