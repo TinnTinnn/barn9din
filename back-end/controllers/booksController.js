@@ -13,6 +13,20 @@ const getBooks = async (req, res) => {
     }
 }
 
+/************************  Get User Books *************************/
+const getUserBooks = async (req, res) => {
+    // Grab the authenticated user form request body
+    const user = await User.findById(req.user._id)
+
+    try {
+        const userBooks = await Book.find({ user: user._id })
+        res.status(200).json({userBooks});
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
+
+
 /************************  Create new Book *************************/
 const addBook = async (req, res) => {
 
@@ -104,4 +118,4 @@ const updateBook = async (req, res) => {
     }
 }
 
-export {getBooks, addBook, deleteBook, updateBook}
+export {getBooks, getUserBooks, addBook, deleteBook, updateBook}

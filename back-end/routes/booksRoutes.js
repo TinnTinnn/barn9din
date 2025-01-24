@@ -1,11 +1,14 @@
 import express from 'express'
-import {addBook, getBooks, deleteBook, updateBook} from "../controllers/booksController.js";
+import {addBook, getBooks, getUserBooks, deleteBook, updateBook} from "../controllers/booksController.js";
 import auth from "../middlewares/auth.js";
 
 const router = express.Router()
 
 //  Get all books route
 router.get('/', getBooks);
+
+//  Get User books route
+router.get('/user', auth, getUserBooks);
 
 // Add new book route
 router.post('/', auth, addBook)
