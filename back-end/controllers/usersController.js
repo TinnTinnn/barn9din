@@ -34,7 +34,7 @@ const registerUser = async (req, res) => {
         // Create th JsonWebToken
         const token = createToken(user._id)
         // Send the response
-        res.status(200).json({success: 'User created successfully.'});
+        res.status(200).json({email, token});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
