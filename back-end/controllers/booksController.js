@@ -6,7 +6,7 @@ import User from "../models/UserModel.js";
 /************************  Get All Books *************************/
 const getBooks = async (req, res) => {
     try {
-        const books = await Book.find().sort({ createdAt: "desc" });
+        const books = await Book.find()
         res.status(200).json({books});
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -19,7 +19,7 @@ const getUserBooks = async (req, res) => {
     const user = await User.findById(req.user._id)
 
     try {
-        const userBooks = await Book.find({ user: user._id }).sort({ createdAt: "desc" });
+        const userBooks = await Book.find({ user: user._id })
         res.status(200).json({userBooks});
     } catch (error) {
         res.status(500).json({error: error.message});
