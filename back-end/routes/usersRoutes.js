@@ -4,7 +4,7 @@ import {registerUser, loginUser, logoutUser} from '../controllers/usersControlle
 const router = express.Router()
 
 // Register user route
-router.post('/', registerUser)
+router.post('/register', registerUser)
 
 // Login user route
 router.post('/login', loginUser)

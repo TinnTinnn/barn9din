@@ -1,7 +1,17 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import Alert from "../../Components/Alert.jsx";
+import {loginUser} from "../../Controllers/userController.js";
+import {UserContext} from "../../contexts/UserContext.jsx";
+import {useNavigate} from "react-router-dom";
+
 
 const Login = () => {
+
+    // Use navigate hook
+    const navigate = useNavigate();
+
+    // Use user context
+    const { setUser } = useContext(UserContext);
 
     // Error state
     const [error, setError] = useState(null);
@@ -11,9 +21,23 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     // Handle login
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(email, password);
+
+        try {
+            // Login the user
+            await loginUser(email, password)
+            // Update the user state
+            setUser({email, books: []});
+            // Navigate to dashboard
+            navigate('/dashboard');
+            // when login success error will not show
+            setError(null);
+        } catch (error) {
+            setError(error.message);
+        }
+
+        // console.log(email, password);
     };
 
     return <section className="card">
