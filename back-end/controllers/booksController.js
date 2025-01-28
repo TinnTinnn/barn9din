@@ -76,7 +76,7 @@ const deleteBook = async (req, res) => {
         await book.deleteOne()
         res.status(200).json({
             success: 'Book deleted successfully.',
-            // book   //Uncomment this line. If i need a detail the book i'v deleted
+            // book   //Uncomment this line. If you need a detail the book have deleted
         });
     } catch (error) {
         return res.status(500).json({error: error.message});
