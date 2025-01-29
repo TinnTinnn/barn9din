@@ -74,7 +74,7 @@ const Register = () => {
             <button className="btn">Register</button>
         </form>
 
-        {error && <Alert smg={error}/>}
+        {error && <Alert msg={error}/>}
     </section>
 
 }

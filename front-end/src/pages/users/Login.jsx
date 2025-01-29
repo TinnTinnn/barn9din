@@ -26,9 +26,9 @@ const Login = () => {
 
         try {
             // Login the user
-            await loginUser(email, password)
+            await loginUser(email, password);
             // Update the user state
-            setUser({email, books: []});
+            setUser({ email, books: []})
             // Navigate to dashboard
             navigate('/dashboard');
             // when login success error will not show
@@ -62,7 +62,7 @@ const Login = () => {
             <button className="btn">Login</button>
         </form>
 
-        {error && <Alert smg={error}/>}
+        {error && <Alert msg={error}/>}
     </section>
 }
 

@@ -1,17 +1,21 @@
 import {Link, Outlet, useNavigate} from "react-router-dom";
-import {useContext} from "react";
+import {useContext,} from "react";
 import {UserContext} from "../contexts/UserContext.jsx";
 
 const Layout = () => {
     const navigate = useNavigate();
     const {user, setUser} = useContext(UserContext)
 
-
     const handleLogout = () => {
-        setUser({email: null, books: []})
-        localStorage.removeItem("email")
-        localStorage.removeItem("token")
-        navigate("/")
+        if (confirm("Confirm Logout?")) {
+            // Reset the User state
+            setUser({email: null, books: []});
+            // Remove the items from local storage
+            localStorage.removeItem("email");
+            localStorage.removeItem("token");
+            // Navigate to Home page
+            navigate("/");
+        }
     }
 
     console.log("👤 User Data:", user);
@@ -20,30 +24,44 @@ const Layout = () => {
     return <>
         <header className="bg-indigo-500 text-white">
             <nav className="flex items-center justify-between p-4">
-                <Link title="Home" to="/" className="nav-link">
+                <Link
+                    title="Home"
+                    to="/"
+                    className="nav-link"
+                >
                     <i className="fa-solid fa-house text-lg"></i>
                 </Link>
 
                 {user.email ? (
                     <div className="flex items-center gap-2">
-                        <Link title="Create Book" to="/create" className="nav-link">
-                            <i className="fa-solid fa-plus text-lg"></i>
-                        </Link>
-                        <Link title="Dashboard" to="/dashboard" className="nav-link">
-                            <i className="fa-solid fa-chart-simple text-lg"></i>
-                        </Link>
-                        <button title="Logout" onClick={handleLogout} className="nav-link">
-                            <i className="fa-solid fa-power-off"></i>
-                        </button>
+                        <Link
+                            title="Create Book"
+                            to="/create"
+                            className="nav-link"
+                        ><i className="fa-solid fa-plus text-lg"></i></Link>
+                        <Link
+                            title="Dashboard"
+                            to="/dashboard"
+                            className="nav-link"
+                        > <i className="fa-solid fa-chart-simple text-lg"></i></Link>
+                        <button
+                            title="Logout"
+                            onClick={handleLogout}
+                            className="nav-link"
+                        > <i className="fa-solid fa-power-off "></i></button>
                     </div>
                 ) : (
                     <div className="flex items-center gap-2">
-                        <Link title="Login" to="/login" className="nav-link">
-                            <i className="fa-solid fa-right-to-bracket text-lg"></i>
-                        </Link>
-                        <Link title="Register" to="/register" className="nav-link">
-                            <i className="fa-solid fa-user-plus text-lg"></i>
-                        </Link>
+                        <Link
+                            title="Login"
+                            to="/login"
+                            className="nav-link"
+                        > <i className="fa-solid fa-right-to-bracket text-lg"></i></Link>
+                        <Link
+                            title="Register"
+                            to="/register"
+                            className="nav-link"
+                        > <i className="fa-solid fa-user-plus text-lg"></i></Link>
                     </div>
                 )}
             </nav>
