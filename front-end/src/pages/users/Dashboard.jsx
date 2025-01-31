@@ -44,16 +44,17 @@ const Dashboard = () => {
             try {
                 // Delete the book
                 const data = await deleteBook(_id);
+                // Set the success message
                 setSuccess(data.success)
             } catch (error) {
                 setError(error.message)
             }
+            // Will update immediately when Delete book with not waiting for refresh
+            const newBooks = user.books.filter((book) => book._id !== _id)
+            setUser({...user, books: newBooks})
         }
-
-        // Will update immediately when Delete book with not waiting for refresh
-        const newBooks = user.books.filter((book) => book._id !== _id)
-        setUser({...user, books: newBooks})
     }
+
 
 
     return (

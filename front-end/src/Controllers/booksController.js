@@ -78,7 +78,7 @@ const deleteBook = async (_id) => {
     return data;
 }
 
-/*************************************  Delete books  ************************************/
+/*************************************  Update books  ************************************/
 const updateBook = async (_id, title, writer) => {
     if (!title || !writer) {
         throw Error('All fields are required');
