@@ -10,7 +10,6 @@ const Update = () => {
     // Use book context
     const { books, setBooks } = useContext(BookContext);
 
-
     // Error state
     const [error, setError] = useState(null);
 
@@ -18,38 +17,35 @@ const Update = () => {
     const navigate = useNavigate()
     const {state} = useLocation();
 
-    if (!state) {
-        return <p>No book data found!</p>
-    }
-
-
     // Form data state
-    const [title, setTitle] = useState(state.title);
-    const [writer, setWriter] = useState(state.writer);
+    const [title, setTitle] = useState(state?.book?.title || '');
+    const [writer, setWriter] = useState(state?.book?.writer || '');
+
+    if (!state || !state.book) {
+        return <p>No book data found!</p>;
+    }
 
 
     const handleUpdate = async (e) => {
         e.preventDefault();
 
         try {
-            // Update a new book
-            const data = await updateBook(state._id, title, writer);
-            console.log("Update Response: ", data);
+            // Update the book
+            const data = await updateBook(state.book._id, title, writer);
+            console.log("Update Response:", data);
 
-            // Update the books stats
+            // Update the books state
             const updatedBooks = books.map((book) =>
-                book._id === state._id ? {...book, title, writer} : book
-            )
-
-            setBooks(updatedBooks)
+                book._id === state.book._id ? { ...book, title, writer } : book
+            );
+            setBooks(updatedBooks);
 
             // Navigate to dashboard
             navigate('/dashboard');
-            console.log(data);
         } catch (error) {
             setError(error.message);
         }
-    }
+    };
 
     return <section className="card">
         <h1 className="title">Update Your Book</h1>

@@ -26,8 +26,10 @@ const Dashboard = () => {
                //  Grab user's books
                const {userBooks, email} = await getUserBooks();
                console.log("User Books Response:", { userBooks, email }); // Check data from API
+
                // Update user state
                setUser({email, books: userBooks})
+
                // Remove the loading
                setLoading(false);
            } catch (error) {
