@@ -26,11 +26,15 @@ const Login = () => {
 
         try {
             // Login the user
-            await loginUser(email, password);
-            // Update the user state
-            setUser({ email, books: []})
+            const data = await loginUser(email, password);
+            console.log("Login Response:", data); // Check data from API
+
+            // Update the user state with data from API
+            setUser({ email: data.email, books: data.books || []})
+
             // Navigate to dashboard
             navigate('/dashboard');
+
             // when login success error will not show
             setError(null);
         } catch (error) {

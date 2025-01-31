@@ -5,16 +5,16 @@ export const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
     const [user, setUser] = useState({
-        email: localStorage.getItem("email"),
+        email: localStorage.getItem("email") || null,
         books: []
-    })
+    });
 
     return (
-        <UserContext.Provider value={{user, setUser}}>
-            { children }
+        <UserContext.Provider value={{ user, setUser }}>
+            {children}
         </UserContext.Provider>
-    )
-}
+    );
+};
 
 
 export default UserProvider

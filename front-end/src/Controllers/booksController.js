@@ -26,6 +26,11 @@ const getUserBooks = async () => {
         throw Error(data.error)
     }
 
+    // ตรวจสอบว่า API ส่ง email กลับมาหรือไม่
+    if (!data.email) {
+        data.email = localStorage.getItem("email"); // ใช้ email จาก localStorage หาก API ไม่ส่งกลับมา
+    }
+
     return data;
 }
 
