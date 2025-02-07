@@ -1,6 +1,6 @@
 import express from 'express'
 import {addBook, getBooks, getUserBooks, deleteBook, updateBook} from "../controllers/booksController.js";
-import auth from "../middlewares/auth.js";
+import {auth} from "../middlewares/auth.js";
 
 const router = express.Router()
 

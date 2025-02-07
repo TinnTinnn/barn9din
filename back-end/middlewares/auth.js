@@ -6,7 +6,7 @@ const auth = async (req, res, next) => {
     const {authorization} = req.headers
 
     if (!authorization) {
-        return res.status(401).json({error: "Authorization token not found"})
+        return res.status(401).json({error: "Unauthorized"})
     }
 
     // Grab the token from headers (taking the "Bearer " string away)
@@ -24,4 +24,11 @@ const auth = async (req, res, next) => {
     }
 }
 
-export default auth
+const adminMiddleware = (req, res, next) => {
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({ error: "Forbidden: Admins only"})
+    }
+    next();
+}
+
+export  {auth, adminMiddleware }

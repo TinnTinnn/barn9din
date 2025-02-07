@@ -1,5 +1,6 @@
 import express from 'express'
-import {registerUser, loginUser, logoutUser} from '../controllers/usersController.js'
+import {registerUser, loginUser, logoutUser, adminLogin, userLogin} from '../controllers/usersController.js'
+import {adminMiddleware, auth} from "../middlewares/auth.js";
 
 const router = express.Router()
 
@@ -11,5 +12,11 @@ router.post('/login', loginUser)
 
 // Logout user route
 router.post('/logout', logoutUser)
+
+// Route user login
+router.get('/user/cart', auth, userLogin)
+
+// Route Admin
+router.get('/admin/dashboard', auth, adminMiddleware, adminLogin)
 
 export { router as usersRoutes }

@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken"
 import 'dotenv/config.js'
 
 /************************  Create JWT Token *************************/
-const createToken = (_id) => {
-    return jwt.sign({_id}, process.env.SECRET, { expiresIn: "10d" });
+const createToken = (_id, role) => {
+    return jwt.sign({_id, role}, process.env.SECRET, { expiresIn: "10h" });
 }
 
 /************************  Register User *************************/
@@ -30,11 +30,11 @@ const registerUser = async (req, res) => {
 
     try {
         // Register the user
-        const user = await User.create({email, password : hashed});
+        const user = await User.create({email, password : hashed, role: roll || "user"});
         // Create th JsonWebToken
-        const token = createToken(user._id)
+        const token = createToken(user._id, user.role)
         // Send the response
-        res.status(200).json({email, token});
+        res.status(200).json({email, role: user.role, token});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -64,9 +64,9 @@ const loginUser = async (req, res) => {
 
     try {
         // Create th JsonWebToken
-        const token = createToken(user._id)
+        const token = createToken(user._id, user.role)
 
-        res.status(200).json({ email, token})
+        res.status(200).json({ email, role: user.role, token})
     }catch(error) {
         res.status(500).json({error: error.message});
     }
@@ -82,5 +82,16 @@ const logoutUser = async (req, res) => {
 };
 
 
+/************************  User cart  *************************/
+const userLogin = async  (req, res) => {
+    res.json({ message: "Welcome back!" , user: req.user })
+}
 
-export {registerUser, loginUser, logoutUser };
+
+
+/************************  Admin Dashboard  *************************/
+const adminLogin =   (req, res) => {
+    res.json({ message: "Welcome to Admin Dashboard"})
+}
+
+export {registerUser, loginUser, logoutUser, userLogin, adminLogin };
