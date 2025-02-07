@@ -29,8 +29,8 @@ const loginUser = async (email, password) => {
 
 
 /************************* Register User ***************************/
-const registerUser = async (email, password, passwordConfirm) => {
-    if (!email || !password || !passwordConfirm) {
+const registerUser = async (email, password, passwordConfirm , role) => {
+    if (!email || !password || !passwordConfirm || !role) {
         throw Error('All fields are required');
     }
 
@@ -45,7 +45,9 @@ const registerUser = async (email, password, passwordConfirm) => {
         },
         body: JSON.stringify({
             email,
-            password
+            password,
+            passwordConfirm,
+            role
         })
     })
 
@@ -57,6 +59,7 @@ const registerUser = async (email, password, passwordConfirm) => {
 
     localStorage.setItem('token', data.token)
     localStorage.setItem('email', data.email)
+    localStorage.setItem('role', data.role)
 
     return data;
 }

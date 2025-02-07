@@ -11,10 +11,11 @@ const createToken = (_id, role) => {
 /************************  Register User *************************/
 const registerUser = async (req, res) => {
     //  Grab data from request body
-    const {email, password} = req.body;
+    const {email, password, role} = req.body;
 
     // Check the fields are not empty
-    if (!email || !password) {
+    console.log(req.body)
+    if (!email || !password || !role) {
         return res.status(400).json({error: "All fields are required."});
     }
 
@@ -30,7 +31,7 @@ const registerUser = async (req, res) => {
 
     try {
         // Register the user
-        const user = await User.create({email, password : hashed, role: roll || "user"});
+        const user = await User.create({email, password : hashed, role: role || "user"});
         // Create th JsonWebToken
         const token = createToken(user._id, user.role)
         // Send the response
@@ -66,7 +67,12 @@ const loginUser = async (req, res) => {
         // Create th JsonWebToken
         const token = createToken(user._id, user.role)
 
-        res.status(200).json({ email, role: user.role, token})
+        res.status(200).json({
+            email: user.email,
+            books: user.books || [],
+            role: user.role,
+            token
+        })
     }catch(error) {
         res.status(500).json({error: error.message});
     }

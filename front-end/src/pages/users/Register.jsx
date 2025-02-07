@@ -19,7 +19,8 @@ const Register = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        passwordConfirm: ''
+        passwordConfirm: '',
+        role: '',
     });
 
 
@@ -27,22 +28,25 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
 
+        console.log(formData);
+
         try {
             // Register the user
             await registerUser(
                 formData.email,
                 formData.password,
-                formData.passwordConfirm
+                formData.passwordConfirm,
+                formData.role
             );
             // Update the user state
-            setUser({email: formData, books: []});
+            setUser({ email: formData.email, role: formData.role, books: [] });
             // Navigate to dashboard
             navigate('/dashboard');
         } catch (error) {
             setError(error.message);
         }
 
-        // console.log(formData);
+        console.log(formData);
     };
 
     return <section className="card">
@@ -71,6 +75,15 @@ const Register = () => {
                 value={formData.passwordConfirm}
                 onChange={(e) => setFormData({...formData, passwordConfirm: e.target.value})}
             />
+            <select
+            className="input"
+            value={formData.role}
+            onChange={(e) => setFormData({...formData, role: e.target.value})}
+            >
+                <option value="">Select Role</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
             <button className="btn">Register</button>
         </form>
 

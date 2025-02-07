@@ -29,8 +29,12 @@ const Login = () => {
             const data = await loginUser(email, password);
             console.log("Login Response:", data); // Check data from API
 
+            // Receive Role and Email to localStorage
+            localStorage.setItem("email",data.email);
+            localStorage.setItem("role",data.role);
+
             // Update the user state with data from API
-            setUser({ email: data.email, books: data.books || []})
+            setUser({ email: data.email, role:data.role, books: data.books || []})
 
             // Navigate to dashboard
             navigate('/dashboard');
