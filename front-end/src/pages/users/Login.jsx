@@ -34,10 +34,19 @@ const Login = () => {
             localStorage.setItem("role",data.role);
 
             // Update the user state with data from API
-            setUser({ email: data.email, role:data.role, books: data.books || []})
+            setUser({
+                email: data.email,
+                role:data.role,
+                books: data.books || []
+            })
+
 
             // Navigate to dashboard
-            navigate('/dashboard');
+            if (data.role === "admin") {
+                navigate('/dashboard');
+            } else {
+                navigate('/')
+            }
 
             // when login success error will not show
             setError(null);

@@ -13,55 +13,78 @@ const Layout = () => {
             // Remove the items from local storage
             localStorage.removeItem("email");
             localStorage.removeItem("token");
+            localStorage.removeItem("role");
             // Navigate to Home page
             navigate("/");
         }
     }
 
     console.log("👤 User Data:", user);
+    console.log("👤 User Role:", user.role);
 
 
     return <>
         <header className="bg-indigo-500 text-white">
             <nav className="flex items-center justify-between p-4">
-                <Link
-                    title="Home"
-                    to="/"
-                    className="nav-link"
-                >
+                <Link title="Home" to="/" className="nav-link">
                     <i className="fa-solid fa-house text-lg"></i>
                 </Link>
 
                 {user.email ? (
                     <div className="flex items-center gap-2">
-                        <Link
-                            title="Create Book"
-                            to="/create"
-                            className="nav-link"
-                        ><i className="fa-solid fa-plus text-lg"></i></Link>
-                        <Link
-                            title="Dashboard"
-                            to="/dashboard"
-                            className="nav-link"
-                        > <i className="fa-solid fa-chart-simple text-lg"></i></Link>
+                        {/* Show Create and Dashboard buttons only for Admin */}
+                        {user.role === "admin" && (
+                            <>
+                                <Link
+                                    title="Create Book"
+                                    to="/create"
+                                    className="nav-link"
+                                >
+                                    <i className="fa-solid fa-plus text-lg"></i>
+                                </Link>
+                                <Link
+                                    title="Dashboard"
+                                    to="/dashboard"
+                                    className="nav-link"
+                                >
+                                    <i className="fa-solid fa-chart-simple text-lg"></i>
+                                </Link>
+                            </>
+                        )}
+
+                        {/* Show Cart button only for User */}
+                        {user.role === "user" && (
+                            <Link title="Cart" to="/cart" className="nav-link">
+                                <i className="fa-solid fa-cart-shopping text-lg"></i>
+                            </Link>
+                        )}
+
+                        {/* Show Logout button for both User and Admin */}
                         <button
                             title="Logout"
                             onClick={handleLogout}
                             className="nav-link"
-                        > <i className="fa-solid fa-power-off "></i></button>
+                        >
+                            <i className="fa-solid fa-power-off"></i>
+                        </button>
                     </div>
                 ) : (
+                    // Show Login and Register buttons if not logged in
                     <div className="flex items-center gap-2">
                         <Link
                             title="Login"
                             to="/login"
                             className="nav-link"
-                        > <i className="fa-solid fa-right-to-bracket text-lg"></i></Link>
+                        >
+                            <i className="fa-solid fa-right-to-bracket text-lg"></i>
+                        </Link>
                         <Link
                             title="Register"
                             to="/register"
                             className="nav-link"
-                        > <i className="fa-solid fa-user-plus text-lg"></i></Link>
+                        >
+                            <i className="fa-solid fa-user-plus text-lg"></i>
+                        </Link>
                     </div>
                 )}
             </nav>

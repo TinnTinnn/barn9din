@@ -6,8 +6,10 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 import Home from "./pages/books/Home.jsx";
 import Create from "./pages/books/Create.jsx";
 import Update from "./pages/books/Update.jsx";
-import AuthRoutes from "./Routes/AuthRoutes.jsx";
 import GuestRoutes from "./Routes/GuestRoutes.jsx";
+import AdminRoutes from "./Routes/AdminRoutes.jsx";
+import AuthRoutes from "./Routes/AuthRoutes.jsx";
+import Cart from "./pages/books/Cart.jsx";
 
 const App = () => {
     return <BrowserRouter>
@@ -15,7 +17,7 @@ const App = () => {
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Home/>}/>
 
-                <Route element={<AuthRoutes/>}>
+                <Route element={<AdminRoutes/>}>
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="create" element={<Create/>}/>
                     <Route path="update" element={<Update/>}/>
@@ -24,6 +26,10 @@ const App = () => {
                 <Route element={<GuestRoutes/>}>
                     <Route path="login" element={<Login/>}/>
                     <Route path="register" element={<Register/>}/>
+                </Route>
+
+                <Route element={<AuthRoutes/>}>
+                    <Route path="cart" element={<Cart/>}/>
                 </Route>
 
             </Route>

@@ -1,11 +1,9 @@
-import {useContext} from "react";
-import {UserContext} from "../contexts/UserContext.jsx";
+
 import {Navigate, Outlet} from "react-router-dom";
 
 const GuestRoutes = () => {
-    const { user } = useContext(UserContext)
-
-    return !user.email ? <Outlet /> : <Navigate to="/dashboard" />
+    const token = localStorage.getItem("token");
+    return token ? <Navigate to="/" /> : <Outlet/>
 }
 
 export default GuestRoutes;
