@@ -4,16 +4,22 @@ import {BookContext} from "../../contexts/BookContext.jsx";
 import Book from "../../Components/Book.jsx";
 import {Link} from "react-router-dom";
 import {CartContext} from "../../contexts/CartContext.jsx";
+import Success from "../../Components/Success.jsx";
+import Alert from "../../Components/Alert.jsx";
 
 
 
 const Home = () => {
     // Use book context
     const { books, setBooks } = useContext(BookContext)
-    const { addToCart } = useContext(CartContext);
+    const { cart, addToCart } = useContext(CartContext);
 
     // Loading state
     const [ loading, setLoading ] = useState(true)
+
+    // Success & Error state
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState(null);
 
     // Grab all the books on page load
     useEffect(() => {
@@ -36,6 +42,22 @@ const Home = () => {
         }, 1000);
     }, []);
 
+    // Add book to cart
+    const handleAddToCart = (book) => {
+        // Check if book already in cart
+        const isDuplicate = cart.some((item) => item._id === book._id);
+        if (isDuplicate) {
+            setError("This book is already in cart.");
+            setTimeout(() => setError(null), 2000)
+            return
+        }
+
+        // Add book and show success
+        addToCart(book);
+        setSuccess("The book has been added successfully.");
+        setTimeout(() => setSuccess(null), 2000)
+    }
+
 
     return (
         <section className="card">
@@ -45,6 +67,10 @@ const Home = () => {
                 <p className="animate-spin text-3xl text-center block"><i className="fa-solid fa-spinner" /></p>
             )}
 
+            {/* Notifications */}
+            {success && <Success msg={success} />}
+            {error && <Alert msg={error} />}
+
             {books && books.map((book) => <div key={book._id}>
                 <Book book={book}>
                     <div className="flex items-center gap-2">
@@ -52,8 +78,7 @@ const Home = () => {
                             className="nav-link text-green-500 hover:bg-green-200"
                             title="Add To Cart"
                             onClick={() => {
-                                addToCart(book);
-                                alert("The book has been added");
+                                handleAddToCart(book);
                             }}
                         >
                             <i className="fa-solid fa-cart-plus"></i>

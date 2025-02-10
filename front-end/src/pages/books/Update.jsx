@@ -20,6 +20,7 @@ const Update = () => {
     // Form data state
     const [title, setTitle] = useState(state?.book?.title || '');
     const [writer, setWriter] = useState(state?.book?.writer || '');
+    const [price, setPrice] = useState(state?.book?.price || '');
 
     if (!state || !state.book) {
         return <p>No book data found!</p>;
@@ -31,12 +32,12 @@ const Update = () => {
 
         try {
             // Update the book
-            const data = await updateBook(state.book._id, title, writer);
+            const data = await updateBook(state.book._id, title, writer, price);
             console.log("Update Response:", data);
 
             // Update the books state
             const updatedBooks = books.map((book) =>
-                book._id === state.book._id ? { ...book, title, writer } : book
+                book._id === state.book._id ? { ...book, title, writer, price } : book
             );
             setBooks(updatedBooks);
 
@@ -66,6 +67,17 @@ const Update = () => {
                     className="input"
                     value={writer}
                     onChange={(e) => setWriter(e.target.value)}
+                />
+                <input
+                    type="number"
+                    placeholder="Price"
+                    className="input"
+                    value={price}
+                    min="0"
+                    onChange={(e) =>{
+                        const value = Math.max(0, e.target.value);
+                        setPrice(value)
+                    }}
                 />
                 <button className ="btn">Update</button>
             </form>

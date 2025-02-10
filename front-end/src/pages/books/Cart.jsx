@@ -10,7 +10,7 @@ const Cart = () => {
            <h1 className="title">Shopping Cart</h1>
 
            {cart.length === 0 ? (
-               <p className="text-gray-500 text-center">ไม่มีสินค้าในตะกร้า</p>
+               <p className="text-gray-500 text-center">Do not have  book in cart</p>
            ) : (
                cart.map((book) => (
                    <div key={book._id}>
