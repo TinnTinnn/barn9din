@@ -2,12 +2,15 @@ import {useContext, useEffect, useState,} from "react";
 import {getBooks} from "../../Controllers/booksController.js";
 import {BookContext} from "../../contexts/BookContext.jsx";
 import Book from "../../Components/Book.jsx";
+import {Link} from "react-router-dom";
+import {CartContext} from "../../contexts/CartContext.jsx";
 
 
 
 const Home = () => {
     // Use book context
     const { books, setBooks } = useContext(BookContext)
+    const { addToCart } = useContext(CartContext);
 
     // Loading state
     const [ loading, setLoading ] = useState(true)
@@ -43,7 +46,20 @@ const Home = () => {
             )}
 
             {books && books.map((book) => <div key={book._id}>
-                <Book book={book} />
+                <Book book={book}>
+                    <div className="flex items-center gap-2">
+                        <Link
+                            className="nav-link text-green-500 hover:bg-green-200"
+                            title="Add To Cart"
+                            onClick={() => {
+                                addToCart(book);
+                                alert("The book has been added");
+                            }}
+                        >
+                            <i className="fa-solid fa-cart-plus"></i>
+                        </Link>
+                    </div>
+                </Book>
             </div>)}
         </section>
     )

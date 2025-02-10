@@ -1,10 +1,13 @@
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import {useContext,} from "react";
 import {UserContext} from "../contexts/UserContext.jsx";
+import {CartContext} from "../contexts/CartContext.jsx";
 
 const Layout = () => {
     const navigate = useNavigate();
     const {user, setUser} = useContext(UserContext)
+
+    const { cart } = useContext(CartContext)
 
     const handleLogout = () => {
         if (confirm("Confirm Logout?")) {
@@ -56,6 +59,11 @@ const Layout = () => {
                         {user.role === "user" && (
                             <Link title="Cart" to="/cart" className="nav-link">
                                 <i className="fa-solid fa-cart-shopping text-lg"></i>
+                                {cart?.length > 0 && (
+                                    <span className="text-xs bg-red-500 text-white rounded-full px-2 ml-1">
+                                        {cart.length}
+                                    </span>
+                                )}
                             </Link>
                         )}
 
