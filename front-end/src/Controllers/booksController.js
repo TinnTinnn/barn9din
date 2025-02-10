@@ -35,8 +35,8 @@ const getUserBooks = async () => {
 }
 
 /*************************************  Create books  ************************************/
- const createBook = async (title, writer, price) => {
-     if (!title || !writer || !price) {
+ const createBook = async (title, writer, price, amount) => {
+     if (!title || !writer || !price || !amount) {
          throw Error('All fields are required');
      }
 
@@ -50,6 +50,7 @@ const getUserBooks = async () => {
              title,
              writer,
              price,
+             amount,
          })
      })
 
@@ -80,8 +81,8 @@ const deleteBook = async (_id) => {
 }
 
 /*************************************  Update books  ************************************/
-const updateBook = async (_id, title, writer, price) => {
-    if (!title || !writer || !price) {
+const updateBook = async (_id, title, writer, price, amount) => {
+    if (!title || !writer || !price || !amount) {
         throw Error('All fields are required');
     }
 
@@ -95,6 +96,7 @@ const updateBook = async (_id, title, writer, price) => {
             title,
             writer,
             price,
+            amount,
         })
     })
     const data = await res.json();

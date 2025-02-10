@@ -22,9 +22,7 @@ const Layout = () => {
         }
     }
 
-    console.log("👤 User Data:", user);
-    console.log("👤 User Role:", user.role);
-
+    console.log(" User Data:", user);
 
     return <>
         <header className="bg-indigo-500 text-white">

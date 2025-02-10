@@ -16,6 +16,7 @@ const Create = () => {
     const [title, setTitle] = useState('');
     const [writer, setWriter] = useState('');
     const [price, setPrice] = useState('');
+    const [amount, setAmount] = useState('');
     const navigate = useNavigate()
 
     const handleCreate = async (e) => {
@@ -23,7 +24,7 @@ const Create = () => {
 
         try {
             // Create a new book
-            const data = await createBook(title, writer, price);
+            const data = await createBook(title, writer, price, amount);
             // Update the books stats
             setBooks([...books, data.book])
             // Navigate to dashboard
@@ -59,9 +60,20 @@ const Create = () => {
                 className="input"
                 value={price}
                 min="0"
-                onChange={(e) =>{
+                onChange={(e) => {
                     const value = Math.max(0, e.target.value);
                     setPrice(value)
+                }}
+            />
+            <input
+                type="number"
+                placeholder="Amount"
+                className="input"
+                value={amount}
+                min="0"
+                onChange={(e) => {
+                    const value = Math.max(0, e.target.value);
+                    setAmount(value)
                 }}
             />
             <button className ="btn">Create</button>

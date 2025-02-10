@@ -19,6 +19,10 @@ const BooksSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    amount: {
+        type: Number,
+        required: true,
+    },
 }, {timestamps: true})
 
 const Book = mongoose.model("Book", BooksSchema);

@@ -31,13 +31,13 @@ const getUserBooks = async (req, res) => {
 const addBook = async (req, res) => {
 
     // Grab the data from request body
-    const {title, writer, price} = req.body
+    const {title, writer, price, amount} = req.body
 
     // Check user does exits
     // res.json(req.user)
 
     // Check the fields are not empty
-    if (!title || !writer || !price ) {
+    if (!title || !writer || !price || !amount ) {
         return res.status(400).json({error: 'All fields are required'});
     }
 
@@ -45,7 +45,7 @@ const addBook = async (req, res) => {
     const user = await User.findById(req.user._id)
 
     try {
-        const book = await Book.create({user: user._id, title, writer, price})
+        const book = await Book.create({user: user._id, title, writer, price, amount})
         res.status(200).json({success: 'Book created successfully.', book});
 
     } catch (error) {
@@ -86,10 +86,10 @@ const deleteBook = async (req, res) => {
 /************************  Update  Book *************************/
 const updateBook = async (req, res) => {
     // Grab the data from request body
-    const {title, writer, price} = req.body
+    const {title, writer, price, amount} = req.body
 
     // Check the fields are not empty
-    if (!title || !writer || !price) {
+    if (!title || !writer || !price || !amount) {
         return res.status(400).json({error: 'All fields are required'});
     }
 
@@ -111,7 +111,7 @@ const updateBook = async (req, res) => {
     }
 
     try {
-        await book.updateOne({title, writer, price},)
+        await book.updateOne({title, writer, price, amount},)
         res.status(200).json({success: 'Book updated successfully.'});
     } catch (error) {
         return res.status(500).json({error: error.message});

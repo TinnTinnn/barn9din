@@ -7,8 +7,15 @@ const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
 
     // Add Book to cart
-    const addToCart = (book) => {
-        setCart((prevCart) => [...prevCart, book])
+    const addToCart = (book, increaseAmount = false) => {
+        if (increaseAmount) {
+            // increase amount of existing book
+            setCart(prevCart => prevCart.map(item =>
+            item._id === book._id ? {...item, amount: item.amount + 1 } : item
+            ))
+        } else {
+            setCart(prevCart => [...prevCart, {...book, amount: 1}])
+        }
     }
 
     // Remove book from cart
