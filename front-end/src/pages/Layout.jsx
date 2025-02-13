@@ -59,7 +59,7 @@ const Layout = () => {
                                 <i className="fa-solid fa-cart-shopping text-lg"></i>
                                 {cart?.length > 0 && (
                                     <span className="text-xs bg-red-500 text-white rounded-full px-2 ml-1">
-                                        {cart.length}
+                                        {cart.reduce((total, book) => total + book.amount, 0)}
                                     </span>
                                 )}
                             </Link>
