@@ -14,7 +14,7 @@ router.post('/login', loginUser)
 router.post('/logout', logoutUser)
 
 // Route user login
-router.get('/user/cart', auth, userLogin)
+router.get('/cart', auth, userLogin)
 
 // Route Admin
 router.get('/admin/dashboard', auth, adminMiddleware, adminLogin)
