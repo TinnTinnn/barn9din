@@ -1,6 +1,6 @@
 /************************* Add Book to Cart ***************************/
-const addToCart = async (bookId, amount) => {
-    if (!bookId || !amount) {
+const addToCart = async (bookId, amountInCart) => {
+    if (!bookId || !amountInCart) {
         throw Error("Book ID and amount are required")
     }
 
@@ -8,11 +8,11 @@ const addToCart = async (bookId, amount) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
             bookId,
-            amount
+            amountInCart
         })
     })
 
@@ -45,8 +45,8 @@ const getCart = async () => {
 
 /************************* Remove Book from Cart ***************************/
 
-const removeFromCart = async (cartItemId) => {
-    const res = await fetch(`/api/cart/${cartItemId}`, {
+const removeFromCart = async (bookId) => {
+    const res = await fetch(`/api/cart/${bookId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`

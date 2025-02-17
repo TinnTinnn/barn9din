@@ -102,13 +102,5 @@ const Layout = () => {
     </>
 }
 
-/************************  To do *************************/
-/************************
- 1. When login success  navigate to dashboard. the link for login and Register button could disappear
- 2. Now when login success and need to interact with create, dashboard, logout button User have to click Home icon.
- that is not we want. because we want to direct to dashboard page and all that icon could show.  but now
- you must go to the home page to visit all icon that you want
-
- *************************/
 
 export default Layout

@@ -13,7 +13,7 @@ import {UserContext} from "../../contexts/UserContext.jsx";
 const Home = () => {
     // Use book context
     const { books, setBooks } = useContext(BookContext)
-    const { cart, addToCart } = useContext(CartContext);
+    const { cart, handleAddToCart, handleUpdateCart } = useContext(CartContext);
     const { user } = useContext(UserContext)
 
     // Loading state
@@ -22,6 +22,9 @@ const Home = () => {
     // Success & Error state
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
+
+    // Local state for amountInCart
+    const [amountInCart, setAmountInCart] = useState({});
 
     // Grab all the books on page load
     useEffect(() => {
@@ -45,28 +48,36 @@ const Home = () => {
     }, []);
 
     // Add book to cart
-    const handleAddToCart = (book) => {
+    const handleCartClick = async (book) => {
 
-        // Check if book already in cart
-        const isBookInCart = cart.some(item => item._id === book._id);
-        if (isBookInCart) {
-            // Increase amount of book in cart
-            const userConfirmed = window.confirm("This Book is already in cart. Do you want to add one more?")
-            if (userConfirmed) {
-                // Add book and show success if say yes!
-                addToCart(book, true); // Add book with increased amount
-                setSuccess("The book has been added successfully.");
-                setTimeout(() => setSuccess(null), 2000)
-            } else {
-                return;
-            }
-        } else {
-            // If cart empty. will add one book
-            addToCart(book);
-            setSuccess("The book has been added successfully.");
-            setTimeout(() => setSuccess(null), 2000);
+       try {
+           const bookId = book._id;
+           const amount = amountInCart[bookId] || 1
+
+           // Call handleAddToCart
+           await handleAddToCart(bookId, amount);
+
+           // Show Notification
+           setSuccess("The book has been added successfully.");
+           setTimeout(() => setSuccess(null), 2000)
+       } catch (error) {
+           console.error("Error adding to cart:", error);
+           setError("Failed to add to cart");
+           setTimeout(() => setError(null), 2000)
+       }
+    }
+
+    // handle amount change
+    const handleAmountChange = (book, action) => {
+      const currentAmount = amountInCart[book._id] || 1;
+      const newAmount = action === "increase" ? currentAmount + 1 : currentAmount -1
+
+        if (newAmount >= 1 && newAmount <= book.amount) { // Ensure it's within stock limits
+            setAmountInCart(prev => ({
+                ...prev,
+                [book._id]: newAmount // Update the amount in the local state
+            }));
         }
-
     }
 
 
@@ -85,16 +96,31 @@ const Home = () => {
             {books && books.map((book) => <div key={book._id}>
                 <Book book={book}>
                     <div className="flex items-center gap-2">
+
+                        {/* Quantity adjustment and Add to Cart */}
                         {user.role === "user" && (
-                            <Link
-                                className="nav-link text-green-500 hover:bg-green-200"
-                                title="Add To Cart"
-                                onClick={() => {
-                                    handleAddToCart(book);
-                                }}
-                            >
-                                <i className="fa-solid fa-cart-plus"></i>
-                            </Link>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    className="text-gray-700 hover:bg-gray-200 px-2 py-1 rounded"
+                                    onClick={() => handleAmountChange(book, "decrease")}
+                                >
+                                    <i className="fa-solid fa-minus"></i>
+                                </button>
+                                <span>{amountInCart[book._id] || 1}</span>
+                                <button
+                                    className="text-gray-700 hover:bg-gray-200 px-2 py-1 rounded"
+                                    onClick={() => handleAmountChange(book, "increase")}
+                                >
+                                    <i className="fa-solid fa-plus"></i>
+                                </button>
+                                <Link
+                                    className="nav-link text-green-500 hover:bg-green-200"
+                                    title="Add To Cart"
+                                    onClick={() => handleCartClick(book)}
+                                >
+                                    <i className="fa-solid fa-cart-plus"></i>
+                                </Link>
+                            </div>
                         )}
                     </div>
                 </Book>

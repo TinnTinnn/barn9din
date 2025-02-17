@@ -1,48 +1,78 @@
-import {createContext, useState} from "react";
+import {createContext, useEffect, useState} from "react";
+import {addToCart, clearCart, getCart, removeFromCart} from "../Controllers/cartController.js";
 
 
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState({items: []});
+    const [loading, setLoading] = useState(true);
 
-    // Add Book to cart
-    const addToCart = (book, increaseAmount = false, decreaseAmount = false) => {
-        if (increaseAmount) {
-            // increase amount of existing book
-            setCart(prevCart => prevCart.map(item =>
-                item._id === book._id ? {...item, amount: item.amount + 1} : item
-            ));
-        } else if (decreaseAmount) {
-            // decrease amount of existing book
-            setCart(prevCart => prevCart.map(item =>
-                item._id === book._id
-                    ? {...item, amount: item.amount > 1 ? item.amount - 1 : 1} // Avoid going below 1
-                    : item
-            ));
-        } else {
-            setCart(prevCart => [...prevCart, {...book, amount: 1}]);
+    //  Grab cart data when first load
+    useEffect(() => {
+        const fetchCart = async () => {
+            try {
+                const cartData = await getCart();
+                setCart(cartData || {items: []});
+            } catch (error) {
+                console.error(error);
+                setCart({items: []});
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchCart();
+    }, [setCart]);
+
+    // Add book to cart
+    const handleAddToCart = async (bookId, amountInCart) => {
+        try {
+            const data = await addToCart(bookId, amountInCart);
+            setCart(data.cart);  // update cart
+        } catch (error) {
+            console.error(error);
         }
     }
 
-    // Remove book from cart with confirmation
-    const removeFromCart = (bookId) => {
-        const confirmDelete = window.confirm("Are you sure you want to remove this item from the cart?");
-        if (confirmDelete) {
-            setCart(prevCart => prevCart.filter(book => book._id !== bookId));
+    // Update cart
+    const handleUpdateCart = (bookId, newAmount) => {
+        setCart((prevState) => {
+            const updatedCart = { ...prevState };
+            const item = updatedCart.items.find((item) => item.bookId === bookId);
+            if (item) {
+                item.amount = newAmount;
+            }
+
+            return updatedCart;
+        })
+    }
+
+    // Remove book from cart
+    const handleRemoveFromCart = async (bookId) => {
+        try {
+            await removeFromCart(bookId);
+            setCart(prevCart => ({
+                ...prevCart,
+                items: prevCart.items.filter(item => item.book._id !== bookId)
+            }))
+        } catch (error) {
+            console.error(error);
         }
     }
 
-    // Remove all items from cart with confirmation
-    const removeAllFromCart = () => {
-        const confirmDelete = window.confirm("Are you sure you want to remove all items from the cart?");
-        if (confirmDelete) {
-            setCart([]);
+    // Remove all from cart
+    const handleClearCart = async () => {
+        try {
+            await clearCart();
+            setCart(null); // clear state
+        } catch (error) {
+            console.error(error);
         }
     }
+
 
     return (
-        <CartContext.Provider value={{ cart, addToCart , removeFromCart ,removeAllFromCart }}>
+        <CartContext.Provider value={{ cart, loading, handleAddToCart, handleUpdateCart, handleRemoveFromCart , handleClearCart }}>
             {children}
         </CartContext.Provider>
     )

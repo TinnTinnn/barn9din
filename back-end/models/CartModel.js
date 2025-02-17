@@ -14,7 +14,7 @@ const CartSchema = new mongoose.Schema({
                 required: true,
                 ref: "Book",
             },
-            amount: {
+            amountInCart: {
                 type: Number,
                 required: true,
                 min: 1

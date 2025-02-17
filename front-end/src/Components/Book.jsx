@@ -16,9 +16,12 @@ const Book = ({book, children}) => {
             <div>{children}</div>
 
         </div>
-        <p className="text-sm mt-4">{book.writer}</p>
+        <p className="text-sm mt-4">Author : {book.writer}</p>
+        <p className="text-sm ">Price : ฿{book.price}</p>
+        <p className="text-sm ">Available : {book.amount}</p>
         <div className="h-px w-full bg-gradient-to-r from-indigo-50 via-indigo-500/70 to-indigo-50 mt-6">
         </div>
+
     </div>
 }
 
@@ -28,6 +31,8 @@ Book.propTypes = {
         createdAt: PropTypes.string,
         body: PropTypes.string,
         writer: PropTypes.string,
+        price: PropTypes.number,
+        amount: PropTypes.number,
     })
 };
 

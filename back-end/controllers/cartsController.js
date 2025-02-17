@@ -17,7 +17,7 @@ const getCart = async  (req, res) => {
 
 /************************  Add Item to Cart  *************************/
 const addToCart = async  (req, res) => {
-    const { bookId, amount } = req.body;
+    const { bookId, amountInCart } = req.body;
 
     try {
         const book = await Book.findById(bookId);
@@ -27,18 +27,18 @@ const addToCart = async  (req, res) => {
 
         if(!cart) {
             // If there is not cart will create one
-            cart = await Cart.create({ user: req.user._id, items: [{ book: bookId, amount}]})
+            cart = await Cart.create({ user: req.user._id, items: [{ book: bookId, amountInCart}]})
 
         }else {
             // Find index of book that already have
             const itemIndex = cart.items.findIndex(item => item.book.equals(bookId))
 
             if (itemIndex > -1) {
-                // If found same id  will plus amount for one
-                cart.items[itemIndex].amount += amount;
+                // If found same id  will plus amountInCart for one
+                cart.items[itemIndex].amountInCart += amountInCart;
             } else {
                 // If not will add another book in cart
-                cart.items.push({ book: bookId, amount });
+                cart.items.push({ book: bookId, amountInCart });
             }
         }
         await cart.save();
@@ -73,9 +73,9 @@ const removeFromCart = async  (req, res) => {
            return res.status(404).json({ error: "Book not found in cart" });
        }
 
-       // If had more than 1 then make amount down for 1
-       if (cart.items[itemIndex].amount > 1) {
-           cart.items[itemIndex].amount -= 1;
+       // If had more than 1 then make amountInCart down for 1
+       if (cart.items[itemIndex].amountInCart > 1) {
+           cart.items[itemIndex].amountInCart -= 1;
            await cart.save();
            return res.status(200).json({ success: "Item updated in cart", cart });
        }
