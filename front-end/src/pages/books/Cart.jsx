@@ -3,7 +3,8 @@ import {CartContext} from "../../contexts/CartContext.jsx";
 
 
 const Cart = () => {
-    const {cart, handleAddToCart, handleRemoveFromCart, handleClearCart} = useContext(CartContext);
+    const {cart, handleAddToCart, handleRemoveFromCart, handleClearCart,} = useContext(CartContext);
+
 
     // Check cart structure
     const cartBooks = Array.isArray(cart?.items)? cart.items : []  // Use cart.items if has data
@@ -13,6 +14,7 @@ const Cart = () => {
     const calculateTotal = () => {
         return cartBooks.reduce((total, book) => total + (Number(book.book.price) * Number(book.amountInCart) || 0), 0).toFixed(2);
     }
+
 
     return (
         <section className="card">
@@ -25,6 +27,7 @@ const Cart = () => {
                     <thead>
                     <tr>
                         <th className="border border-gray-300 p-2">Book</th>
+                        <th className="border border-gray-300 p-2">Stock</th>
                         <th className="border border-gray-300 p-2">Price</th>
                         <th className="border border-gray-300 p-2">Quantity</th>
                         <th className="border border-gray-300 p-2">Total</th>
@@ -35,28 +38,38 @@ const Cart = () => {
                     {cartBooks.map((book, index) => (
                         <tr key={book._id || book.bookId || index}>
                             <td className="p-2">{book.book.title}</td>
+                            <td className="p-2">{book.book.amount}</td>
                             <td className="p-2">฿{Number(book.book.price) || 0}</td>
                             <td className="p-2 text-center">
                                 <div className="flex items-center justify-center gap-2  p-2 rounded">
                                     <button className="cursor-pointer"
                                             onClick={() => {
                                                 if (book.amountInCart > 1) {
-                                                    handleAddToCart(book._id || book.bookId, -1);
+                                                    handleAddToCart(book.book._id || book.book.bookId, -1);
                                                 } else {
-                                                    handleRemoveFromCart(book._id || book.bookId);
+                                                    const confirmDelete = window.confirm("Are you sure you want to delete this book?");
+                                                    if (confirmDelete) {
+                                                        handleRemoveFromCart(book.book._id || book.book.bookId);
+                                                    }
                                                 }
                                             }}>
                                         <i className="fa-solid fa-minus"></i>
                                     </button>
                                     <span>{Number(book.amountInCart) || 1}</span>
-                                    <button className="cursor-pointer" onClick={() => handleAddToCart(book._id || book.bookId, 1)}>
+                                    <button className="cursor-pointer" onClick={() => handleAddToCart(book.book._id || book.book.bookId, 1)}>
                                         <i className="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                             </td>
                             <td className="text-center">฿{(Number(book.book.price) * Number(book.amountInCart) || 0).toFixed(2)}</td>
                             <td className="text-center">
-                                <button className="text-red-500 hover:bg-red-200 cursor-pointer" onClick={() => handleRemoveFromCart(book._id || book.bookId)}>
+                                <button className="text-red-500 hover:bg-red-200 cursor-pointer" onClick={() => {
+                                    const confirmDelete = window.confirm("Are you sure you want to delete this book?");
+                                    if (confirmDelete) {
+                                        handleRemoveFromCart(book.book._id || book.book.bookId);
+                                    }
+                                }}
+                                >
                                     <i className="fa-solid fa-trash-can"/>
                                 </button>
                             </td>

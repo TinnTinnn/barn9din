@@ -23,21 +23,26 @@ const addToCart = async  (req, res) => {
         const book = await Book.findById(bookId);
         if(!book) return res.status(404).json({ error: "Book not found" });
 
+        // Check if the requested amountInCart exceeds the stock
+        if (amountInCart > book.amount) {
+            return res.status(400).json({ error: `You cannot add more than ${book.amount} items to the cart`})
+        }
+
         let cart = await Cart.findOne({ user: req.user._id})
 
         if(!cart) {
-            // If there is not cart will create one
+            // If no cart exists, create one
             cart = await Cart.create({ user: req.user._id, items: [{ book: bookId, amountInCart}]})
 
         }else {
-            // Find index of book that already have
+            // Find index of the existing book in the cart
             const itemIndex = cart.items.findIndex(item => item.book.equals(bookId))
 
             if (itemIndex > -1) {
-                // If found same id  will plus amountInCart for one
+                // If the book is already in the cart, update the quantity
                 cart.items[itemIndex].amountInCart += amountInCart;
             } else {
-                // If not will add another book in cart
+                // If the book is not in the cart, add it
                 cart.items.push({ book: bookId, amountInCart });
             }
         }
@@ -46,7 +51,7 @@ const addToCart = async  (req, res) => {
         // Populate book info for title, writer, price
         const populateCart = await Cart.findById(cart._id).populate({
             path: "items.book",
-            select: "title writer price"
+            select: "title writer price amount"
         })
 
         res.status(200).json({ success: "Item added to cart", cart: populateCart });
@@ -73,15 +78,16 @@ const removeFromCart = async  (req, res) => {
            return res.status(404).json({ error: "Book not found in cart" });
        }
 
-       // If had more than 1 then make amountInCart down for 1
-       if (cart.items[itemIndex].amountInCart > 1) {
-           cart.items[itemIndex].amountInCart -= 1;
-           await cart.save();
-           return res.status(200).json({ success: "Item updated in cart", cart });
+       // Remove all amount of book form cart
+       cart.items.splice(itemIndex, 1);
+
+
+       // If cart empty will set cart to 'items= []'
+       if (cart.items.length === 0 ) {
+           cart.items = [];
        }
 
-       // ถ้ามีแค่ 1 เล่มให้ลบ Cart ทั้งหมดออกจาก database
-       await Cart.deleteOne({ _id: cart._id });
+       await cart.save();
        return res.status(200).json({ success: "Cart deleted because it is empty" });
 
    } catch (error) {

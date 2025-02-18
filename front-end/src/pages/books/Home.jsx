@@ -13,7 +13,7 @@ import {UserContext} from "../../contexts/UserContext.jsx";
 const Home = () => {
     // Use book context
     const { books, setBooks } = useContext(BookContext)
-    const { cart, handleAddToCart, handleUpdateCart } = useContext(CartContext);
+    const { handleAddToCart } = useContext(CartContext);
     const { user } = useContext(UserContext)
 
     // Loading state
@@ -69,15 +69,19 @@ const Home = () => {
 
     // handle amount change
     const handleAmountChange = (book, action) => {
-      const currentAmount = amountInCart[book._id] || 1;
-      const newAmount = action === "increase" ? currentAmount + 1 : currentAmount -1
+        const currentAmount = amountInCart[book._id] || 1;
+        const newAmount = action === "increase" ? currentAmount + 1 : currentAmount - 1;
 
-        if (newAmount >= 1 && newAmount <= book.amount) { // Ensure it's within stock limits
-            setAmountInCart(prev => ({
-                ...prev,
-                [book._id]: newAmount // Update the amount in the local state
-            }));
+        // Check stock in frontend
+        if (newAmount > book.amount) {
+            alert(`Sorry, we don't have enough stock! Only ${book.amount} left in stock.`);
+            return;
         }
+
+        setAmountInCart(prev => ({
+            ...prev,
+            [book._id]: newAmount
+        }));
     }
 
 

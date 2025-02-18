@@ -7,6 +7,7 @@ export const CartContext = createContext();
 const CartProvider = ({ children }) => {
     const [cart, setCart] = useState({items: []});
     const [loading, setLoading] = useState(true);
+    const totalItems = cart.items.reduce((acc, item) => acc + item.amountInCart, 0)
 
     //  Grab cart data when first load
     useEffect(() => {
@@ -64,7 +65,7 @@ const CartProvider = ({ children }) => {
     const handleClearCart = async () => {
         try {
             await clearCart();
-            setCart(null); // clear state
+            setCart({items: []}); // clear state
         } catch (error) {
             console.error(error);
         }
@@ -72,7 +73,7 @@ const CartProvider = ({ children }) => {
 
 
     return (
-        <CartContext.Provider value={{ cart, loading, handleAddToCart, handleUpdateCart, handleRemoveFromCart , handleClearCart }}>
+        <CartContext.Provider value={{ totalItems, cart, loading, handleAddToCart, handleUpdateCart, handleRemoveFromCart , handleClearCart }}>
             {children}
         </CartContext.Provider>
     )
