@@ -56,7 +56,14 @@ const Cart = () => {
                                         <i className="fa-solid fa-minus"></i>
                                     </button>
                                     <span>{Number(book.amountInCart) || 1}</span>
-                                    <button className="cursor-pointer" onClick={() => handleAddToCart(book.book._id || book.book.bookId, 1)}>
+                                    <button className="cursor-pointer"  onClick={() => {
+                                        if (book.amountInCart >= book.book.amount) {
+                                            alert(`Sorry, we don't have enough stock! Only ${book.book.amount} left in stock.`);
+
+                                            return;
+                                        }
+                                        handleAddToCart(book.book._id || book.book.bookId, 1);
+                                    }}>
                                         <i className="fa-solid fa-plus"></i>
                                     </button>
                                 </div>

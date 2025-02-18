@@ -72,11 +72,13 @@ const Home = () => {
         const currentAmount = amountInCart[book._id] || 1;
         const newAmount = action === "increase" ? currentAmount + 1 : currentAmount - 1;
 
+
         // Check stock in frontend
         if (newAmount > book.amount) {
             alert(`Sorry, we don't have enough stock! Only ${book.amount} left in stock.`);
             return;
         }
+
 
         setAmountInCart(prev => ({
             ...prev,

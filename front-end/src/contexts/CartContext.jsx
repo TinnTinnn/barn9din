@@ -26,10 +26,10 @@ const CartProvider = ({ children }) => {
     }, [setCart]);
 
     // Add book to cart
-    const handleAddToCart = async (bookId, amountInCart) => {
+    const handleAddToCart = async (bookId, amountToAdd) => {
         try {
-            const data = await addToCart(bookId, amountInCart);
-            setCart(data.cart);  // update cart
+            const data = await addToCart(bookId, amountToAdd);
+            setCart(data.cart);  // อัปเดตตะกร้า
         } catch (error) {
             console.error(error);
         }
