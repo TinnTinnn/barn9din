@@ -3,17 +3,24 @@ import {CartContext} from "../../contexts/CartContext.jsx";
 
 
 const Cart = () => {
-    const {cart, handleAddToCart, handleRemoveFromCart, handleClearCart,} = useContext(CartContext);
+    const {cart, handleAddToCart, handleRemoveFromCart, handleClearCart, discount} = useContext(CartContext);
 
 
     // Check cart structure
     const cartBooks = Array.isArray(cart?.items)? cart.items : []  // Use cart.items if has data
     console.log("Cart Books:", cartBooks)
 
-    // Calculate all price
+    // Calculate total price
     const calculateTotal = () => {
         return cartBooks.reduce((total, book) => total + (Number(book.book.price) * Number(book.amountInCart) || 0), 0).toFixed(2);
-    }
+    };
+    console.log("Calculate Total:", calculateTotal());
+
+    // Get discount
+    const discountAmount = discount // discount from cartItems
+
+    // get discount
+    const finalTotal = (calculateTotal() - discountAmount) || 0;
 
 
     return (
@@ -87,15 +94,30 @@ const Cart = () => {
             )}
 
             {cartBooks.length > 0 && (
-                <div className="mt-4 flex justify-between">
-                    <span className="font-bold">Total: ฿{calculateTotal()}</span>
-                    <button
-                        className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer"
-                        onClick={handleClearCart}>
+                <div className="mt-4 flex flex-col gap-2">
+                    <div className="flex justify-between">
+                        <span className="text-lg font-bold">Total:</span>
+                        <span className="text-lg">฿{calculateTotal()}</span>
+                    </div>
 
-                        Clear Cart
-                    </button>
+                    <div className="flex justify-between">
+                        <span className="text-lg font-bold text-green-500">Discount:</span>
+                        <span className="text-lg font-bold text-green-500">฿{discountAmount.toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex justify-between font-bold text-xl">
+                        <span>Total Price after Discount:</span>
+                        <span className="text-red-500">฿{finalTotal.toFixed(2)}</span>
+                    </div>
+                    <div className="mt-4 flex justify-end">
+                        <button
+                            className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer"
+                            onClick={handleClearCart}>
+                            Clear Cart
+                        </button>
+                    </div>
                 </div>
+
             )}
 
         </section>
