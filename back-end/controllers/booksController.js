@@ -6,12 +6,40 @@ import User from "../models/UserModel.js";
 /************************  Get All Books *************************/
 const getBooks = async (req, res) => {
     try {
-        const books = await Book.find()
-        res.status(200).json({books});
+        // Do paginate
+        let page = parseInt(req.query.page) || 1; // Default to page 1 if no value is provided
+        let limit = parseInt(req.query.limit) || 10; // Default to limit 10 if no value is provided
+
+        // Check if page or limit values are valid (value than 0)
+        if (page <= 0 || limit <= 0) {
+            return res.status(400).json({ error: "Invalid page or limit value" });
+        }
+
+        // Calculate the number of documents to skip for pagination
+        const skip = (page - 1) * limit; // Calculate how many documents to skip based on the current page
+
+        // Retrieve the books based on the calculated skip and limit
+        const books = await Book.find().skip(skip).limit(limit);
+
+        // Retrieve the total number of books in the collection
+        const totalCount = await Book.countDocuments();
+
+        if (!books.length) {
+            return res.status(404).json({ error: "No books found" });
+        }
+
+        res.status(200).json({
+            books,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / limit),
+            totalCount
+        });
     } catch (error) {
-        res.status(500).json({error: error.message});
+        console.error(error);
+        res.status(500).json({ error: error.message });
     }
-}
+};
+
 
 /************************  Get User Books *************************/
 const getUserBooks = async (req, res) => {
